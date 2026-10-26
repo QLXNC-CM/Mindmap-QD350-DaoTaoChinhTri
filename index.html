@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Mindmap Quy định 350-QĐ/TW</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Noto+Serif:wght@600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#f6f4ef;
+        --surface:#ffffff;
+        --surface-2:#efece4;
+        --ink:#1d2430;
+        --ink-soft:#4b5568;
+        --ink-faint:#7a8496;
+        --line:#ddd6c8;
+        --red:#a31d16;
+        --red-deep:#7e130d;
+        --gold:#b8860b;
+        --gold-soft:#c9a227;
+        --canvas-bg:#f1eee6;
+        --dot:#d8d2c2;
+        --shadow:0 1px 2px rgba(30,25,10,.08),0 4px 14px rgba(30,25,10,.07);
+        --shadow-lg:0 10px 34px rgba(30,25,10,.18);
+        --btn-bg:#ffffff;
+        --btn-ink:#333a47;
+        color-scheme:light;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#171512;
+          --surface:#221f1b;
+          --surface-2:#2b2721;
+          --ink:#ece7db;
+          --ink-soft:#b9b2a2;
+          --ink-faint:#8d8674;
+          --line:#3d382f;
+          --red:#c8402f;
+          --red-deep:#8f2318;
+          --gold:#d9a92c;
+          --gold-soft:#c9a227;
+          --canvas-bg:#1b1915;
+          --dot:#35311f;
+          --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.35);
+          --shadow-lg:0 10px 34px rgba(0,0,0,.55);
+          --btn-bg:#2b2721;
+          --btn-ink:#e6e0d0;
+          color-scheme:dark;
+        }
+      }
+      *{box-sizing:border-box}
+      html,body{margin:0;padding:0}
+      body{
+        background:var(--bg);
+        color:var(--ink);
+        font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+        -webkit-font-smoothing:antialiased;
+        line-height:1.5;
+      }
+      .wrap{max-width:1240px;margin:0 auto;padding:22px 18px 40px}
+
+      /* ---------- Header ---------- */
+      header.doc-head{border-bottom:3px double var(--gold-soft);padding-bottom:16px;margin-bottom:14px}
+      .org-line{font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin:0 0 6px}
+      .org-line span{color:var(--ink-faint);font-weight:600;letter-spacing:.02em;text-transform:none}
+      h1{
+        font-family:"Noto Serif",serif;font-weight:800;
+        font-size:clamp(24px,4.4vw,38px);line-height:1.18;margin:0 0 6px;color:var(--ink);
+      }
+      h1 .no{color:var(--red);white-space:nowrap}
+      .doc-sub{font-size:clamp(14px,2.4vw,17px);color:var(--ink-soft);margin:0 0 12px;max-width:820px}
+      .meta-chips{display:flex;flex-wrap:wrap;gap:8px}
+      .chip{
+        display:inline-flex;align-items:center;gap:6px;
+        background:var(--surface);border:1px solid var(--line);border-radius:999px;
+        padding:5px 12px;font-size:12.5px;font-weight:600;color:var(--ink-soft);
+      }
+      .chip b{color:var(--ink)}
+      .chip .dot-sep{width:6px;height:6px;border-radius:50%;background:var(--gold-soft);flex:none}
+
+      /* ---------- Toolbar ---------- */
+      .toolbar{
+        position:sticky;top:0;z-index:40;
+        display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+        background:color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter:blur(8px);
+        padding:10px 0;margin-bottom:10px;
+      }
+      .search-box{position:relative;flex:1 1 220px;max-width:420px}
+      .search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--ink-faint);pointer-events:none}
+      .search-box input{
+        width:100%;padding:9px 56px 9px 34px;border:1px solid var(--line);border-radius:9px;
+        background:var(--surface);color:var(--ink);font:inherit;font-size:14px;outline:none;
+      }
+      .search-box input:focus{border-color:var(--gold-soft);box-shadow:0 0 0 3px color-mix(in srgb, var(--gold-soft) 25%, transparent)}
+      .search-count{
+        position:absolute;right:8px;top:50%;transform:translateY(-50%);
+        font-size:11.5px;font-weight:700;color:var(--gold);white-space:nowrap;display:none;
+      }
+      .tbtn{
+        appearance:none;border:1px solid var(--line);background:var(--btn-bg);color:var(--btn-ink);
+        border-radius:9px;padding:8px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;
+        display:inline-flex;align-items:center;gap:6px;box-shadow:var(--shadow);
+      }
+      .tbtn:hover{border-color:var(--gold-soft)}
+      .tbtn svg{width:15px;height:15px;stroke:currentColor;flex:none}
+      .tbtn.seg{box-shadow:none}
+      .tbtn.seg.active{background:var(--red);border-color:var(--red);color:#fff}
+      .seg-group{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+      .seg-group .tbtn{border:0;border-radius:0}
+      .seg-group .tbtn + .tbtn{border-left:1px solid var(--line)}
+      .toolbar .spacer{flex:1}
+
+      /* ---------- Canvas ---------- */
+      .viewport{
+        position:relative;height:min(72vh,760px);min-height:430px;
+        border:1px solid var(--line);border-radius:14px;overflow:hidden;
+        background:
+          radial-gradient(circle, var(--dot) 1.1px, transparent 1.2px) 0 0/22px 22px,
+          var(--canvas-bg);
+        touch-action:none;cursor:grab;outline:none;
+      }
+      .viewport:active{cursor:grabbing}
+      .world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+      .world svg.wires{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+      .node{
+        position:absolute;border-radius:10px;padding:9px 12px 9px 14px;
+        background:color-mix(in srgb, var(--bc) 7%, var(--surface));
+        border:1px solid color-mix(in srgb, var(--bc) 38%, var(--line));
+        border-left:5px solid var(--bc);
+        box-shadow:var(--shadow);
+        font-size:12.8px;line-height:1.42;color:var(--ink);
+        user-select:none;-webkit-user-select:none;
+      }
+      .node .nt{font-weight:600}
+      .node .ref{font-weight:800;color:var(--bc);margin-right:5px}
+      .node.d1{
+        background:var(--bc);border-color:var(--bc);color:#fff;
+        font-size:15.5px;padding:13px 16px;border-left:5px solid var(--bc);
+      }
+      .node.d1 .nt{font-weight:800;letter-spacing:.01em}
+      .node.d1 .ref{color:#ffe9a8}
+      .node.d2{font-size:13.6px;background:color-mix(in srgb, var(--bc) 15%, var(--surface))}
+      .node.d2 .nt{font-weight:700}
+      .node.root{
+        background:linear-gradient(150deg,#b3231a,#7e130d);
+        border:2px solid var(--gold-soft);color:#fff;text-align:center;
+        padding:18px 20px;border-radius:14px;box-shadow:var(--shadow-lg);
+      }
+      .node.root .r-no{font-family:"Noto Serif",serif;font-size:21px;font-weight:800;line-height:1.25}
+      .node.root .r-name{font-size:13.5px;font-weight:600;color:#ffe9a8;margin-top:5px;line-height:1.45}
+      .node.root .r-meta{font-size:11.5px;color:rgba(255,255,255,.85);margin-top:7px;font-weight:500}
+      .node.has-kids{cursor:pointer}
+      .node .toggle{
+        position:absolute;right:-11px;top:50%;transform:translateY(-50%);
+        width:22px;height:22px;border-radius:50%;border:2px solid var(--surface);
+        background:var(--bc);color:#fff;font-size:12px;font-weight:800;line-height:1;
+        display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;
+        box-shadow:var(--shadow);
+      }
+      .node.hit{
+        outline:3px solid var(--gold-soft);outline-offset:2px;
+        background:color-mix(in srgb, var(--gold-soft) 26%, var(--surface));
+      }
+      .node.d1.hit{background:var(--bc);outline-color:var(--gold)}
+      .zoom-ctl{
+        position:absolute;right:12px;bottom:12px;z-index:5;display:flex;flex-direction:column;gap:6px;
+      }
+      .zoom-ctl button{
+        width:38px;height:38px;border-radius:10px;border:1px solid var(--line);
+        background:var(--btn-bg);color:var(--btn-ink);font-size:18px;font-weight:700;cursor:pointer;
+        box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;line-height:1;
+      }
+      .zoom-ctl button svg{width:17px;height:17px;stroke:currentColor}
+      .hint{
+        position:absolute;left:12px;bottom:12px;z-index:5;font-size:11.5px;font-weight:600;
+        color:var(--ink-faint);background:color-mix(in srgb, var(--surface) 82%, transparent);
+        border:1px solid var(--line);border-radius:8px;padding:5px 9px;pointer-events:none;
+      }
+      .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;font-size:12.5px;color:var(--ink-soft);font-weight:600}
+      .legend span{display:inline-flex;align-items:center;gap:7px}
+      .legend i{width:22px;height:5px;border-radius:3px;display:inline-block}
+
+      /* ---------- List view ---------- */
+      .listview{display:none}
+      .listview.on{display:block}
+      .viewport.off{display:none}
+      .outline{list-style:none;margin:0;padding:0}
+      .outline ul{list-style:none;margin:4px 0 10px;padding-left:22px;border-left:2px solid color-mix(in srgb, var(--bc, var(--line)) 30%, var(--line))}
+      .outline li{margin:5px 0;font-size:14px;line-height:1.5}
+      .outline .lv-chapter{
+        font-family:"Noto Serif",serif;font-size:19px;font-weight:800;color:var(--bc);
+        margin:22px 0 8px;
+      }
+      .outline .lv-article{font-weight:700;font-size:15.5px;margin-top:12px}
+      .outline .lv-article .ref{color:var(--bc)}
+      .outline .lv-group{font-weight:700}
+      .outline .lv-group .ref{color:var(--bc)}
+      .outline li.hit{background:color-mix(in srgb, var(--gold-soft) 28%, transparent);border-radius:6px;padding:2px 6px;margin-left:-6px}
+
+      /* ---------- Quick compare ---------- */
+      section.quick{margin-top:34px}
+      section.quick h2{
+        font-family:"Noto Serif",serif;font-size:21px;font-weight:800;margin:0 0 4px;
+      }
+      section.quick h2 .bar{display:inline-block;width:34px;height:4px;background:var(--red);border-radius:2px;vertical-align:middle;margin-right:10px}
+      section.quick p.lede{color:var(--ink-soft);font-size:13.5px;margin:0 0 14px}
+      .cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      .cmp-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+      .cmp-card header{padding:13px 16px;color:#fff}
+      .cmp-card.tc header{background:#0b6e4f}
+      .cmp-card.cc header{background:#0b6e4f;background:#175cd3}
+      .cmp-card header .k{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+      .cmp-card header .t{font-size:17px;font-weight:800;margin-top:2px}
+      .cmp-card dl{margin:0;padding:6px 16px 12px}
+      .cmp-card .row{display:flex;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line)}
+      .cmp-card .row:last-child{border-bottom:0}
+      .cmp-card dt{flex:0 0 128px;font-size:12px;font-weight:700;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;padding-top:2px}
+      .cmp-card dd{margin:0;font-size:13.8px;font-weight:600}
+      .cmp-card dd small{display:block;font-weight:500;color:var(--ink-soft);font-size:12.3px;margin-top:2px}
+      .foot-note{font-size:12.3px;color:var(--ink-soft);margin-top:12px}
+      footer.doc-foot{
+        margin-top:30px;border-top:1px solid var(--line);padding-top:14px;
+        font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:space-between;
+      }
+
+      @media (max-width:680px){
+        .wrap{padding:16px 12px 32px}
+        .viewport{height:64vh;min-height:400px}
+        .cmp{grid-template-columns:1fr}
+        .cmp-card dt{flex-basis:108px}
+        .hint{display:none}
+        .toolbar{position:static}
+      }
+      @media print{
+        .toolbar,.zoom-ctl,.hint,.viewport{display:none !important}
+        .listview{display:block !important}
+        body{background:#fff}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="doc-head">
+        <p class="org-line">Ban Chấp hành Trung ương <span>· Ban Bí thư</span></p>
+        <h1>Quy định số <span class="no">350-QĐ/TW</span></h1>
+        <p class="doc-sub">Sơ đồ tư duy (mindmap) về <b>đối tượng, tiêu chuẩn và phân cấp đào tạo lý luận chính trị</b> — toàn văn gồm 4 chương, 10 điều.</p>
+        <div class="meta-chips">
+          <span class="chip"><span class="dot-sep"></span>Ban hành <b>29/8/2025</b></span>
+          <span class="chip"><span class="dot-sep"></span><b>4</b> chương · <b>10</b> điều</span>
+          <span class="chip"><span class="dot-sep"></span>Thay thế Quy định <b>57-QĐ/TW</b> ngày 08/02/2022</span>
+          <span class="chip"><span class="dot-sep"></span>Hiệu lực từ <b>ngày ký</b></span>
+        </div>
+      </header>
+
+      <div class="toolbar" role="toolbar" aria-label="Công cụ sơ đồ">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+          <input id="searchInput" type="search" placeholder="Tìm trong sơ đồ… (vd: tuổi, công an, giảng viên)" aria-label="Tìm kiếm nội dung trong sơ đồ" />
+          <span class="search-count" id="searchCount"></span>
+        </div>
+        <button class="tbtn" id="btnExpand" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+          Mở rộng tất cả
+        </button>
+        <button class="tbtn" id="btnCollapse" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h5V3M21 8h-5V3M3 16h5v5M21 16h-5v5"/></svg>
+          Thu gọn
+        </button>
+        <button class="tbtn" id="btnFit" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+          Vừa khung
+        </button>
+        <span class="spacer"></span>
+        <div class="seg-group" role="group" aria-label="Chế độ xem">
+          <button class="tbtn seg active" id="viewMap" type="button">Sơ đồ</button>
+          <button class="tbtn seg" id="viewList" type="button">Danh sách</button>
+        </div>
+      </div>
+
+      <div class="viewport" id="viewport" tabindex="0" aria-label="Khu vực sơ đồ tư duy — kéo để di chuyển, cuộn chuột hoặc chụm ngón tay để phóng to thu nhỏ">
+        <div class="world" id="world">
+          <svg class="wires" id="wires" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="zoom-ctl">
+          <button type="button" id="zoomIn" aria-label="Phóng to">+</button>
+          <button type="button" id="zoomOut" aria-label="Thu nhỏ">−</button>
+          <button type="button" id="zoomFit" aria-label="Vừa khung hình">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+          </button>
+        </div>
+        <div class="hint">Kéo để di chuyển · Cuộn chuột / chụm để zoom · Nhấn vào nút có dấu + để mở nhánh</div>
+      </div>
+
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:#b42318"></i>Chương I — Quy định chung</span>
+        <span><i style="background:#0b6e4f"></i>Chương II — Đối tượng, tiêu chuẩn</span>
+        <span><i style="background:#175cd3"></i>Chương III — Phân cấp đào tạo</span>
+        <span><i style="background:#b54708"></i>Chương IV — Điều khoản thi hành</span>
+      </div>
+
+      <div class="listview" id="listview"></div>
+
+      <section class="quick" aria-label="Tra cứu nhanh trung cấp và cao cấp lý luận chính trị">
+        <h2><span class="bar"></span>Tra cứu nhanh: Trung cấp ↔ Cao cấp</h2>
+        <p class="lede">Đối chiếu tiêu chuẩn cốt lõi theo Điều 4 và Điều 5 của Quy định.</p>
+        <div class="cmp">
+          <article class="cmp-card tc">
+            <header>
+              <div class="k">Điều 4</div>
+              <div class="t">Trung cấp lý luận chính trị</div>
+            </header>
+            <dl>
+              <div class="row"><dt>Đối tượng cốt lõi</dt><dd>Cán bộ đương chức hoặc quy hoạch lãnh đạo, quản lý cấp xã và tương đương<small>Cấp ủy viên chi bộ cơ sở, đảng bộ cơ sở trở lên; phó trưởng phòng trở lên; phó trưởng công an cấp xã, phó đội trưởng trở lên…</small></dd></div>
+              <div class="row"><dt>Đảng viên</dt><dd>Đảng viên dự bị hoặc chính thức</dd></div>
+              <div class="row"><dt>Học vấn</dt><dd>Tốt nghiệp cao đẳng trở lên<small>Trung học phổ thông trở lên đối với cán bộ là người dân tộc thiểu số, công tác tại xã, đặc khu miền núi, biên giới, hải đảo, vùng sâu, vùng xa, vùng có điều kiện KT-XH đặc biệt khó khăn.</small></dd></div>
+              <div class="row"><dt>Xếp loại</dt><dd>2 năm liên tục liền kề: hoàn thành tốt nhiệm vụ trở lên</dd></div>
+              <div class="row"><dt>Tuổi (hệ không tập trung)</dt><dd>Nữ từ 28 tuổi, nam từ 30 tuổi trở lên</dd></div>
+              <div class="row"><dt>Nơi đào tạo</dt><dd>Trường chính trị cấp tỉnh; một số học viện, trường của Bộ Quốc phòng, Bộ Công an</dd></div>
+            </dl>
+          </article>
+          <article class="cmp-card cc">
+            <header>
+              <div class="k">Điều 5</div>
+              <div class="t">Cao cấp lý luận chính trị</div>
+            </header>
+            <dl>
+              <div class="row"><dt>Đối tượng cốt lõi</dt><dd>Cán bộ đương chức hoặc quy hoạch lãnh đạo, quản lý trung và cao cấp<small>Ủy viên BCH đảng bộ cấp trên trực tiếp của tổ chức cơ sở đảng trở lên; trưởng phòng cấp xã trở lên; trưởng công an cấp xã, phó trưởng phòng trở lên…</small></dd></div>
+              <div class="row"><dt>Đảng viên</dt><dd>Đảng viên chính thức</dd></div>
+              <div class="row"><dt>Học vấn</dt><dd>Tốt nghiệp đại học trở lên</dd></div>
+              <div class="row"><dt>Xếp loại</dt><dd>2 năm liên tục liền kề: hoàn thành tốt nhiệm vụ trở lên</dd></div>
+              <div class="row"><dt>Tuổi (hệ không tập trung)</dt><dd>Nữ từ 33 tuổi, nam từ 35 tuổi trở lên</dd></div>
+              <div class="row"><dt>Nơi đào tạo</dt><dd>Học viện Chính trị quốc gia Hồ Chí Minh; một số học viện của Bộ Quốc phòng, Bộ Công an</dd></div>
+            </dl>
+          </article>
+        </div>
+        <p class="foot-note">Trường hợp đặc biệt ở cả hai cấp đào tạo do cấp có thẩm quyền xem xét, quyết định (khoản 3 Điều 4 và khoản 3 Điều 5).</p>
+      </section>
+
+      <footer class="doc-foot">
+        <span>Nguồn: Quy định số 350-QĐ/TW ngày 29/8/2025 của Ban Bí thư về đối tượng, tiêu chuẩn và phân cấp đào tạo lý luận chính trị.</span>
+        <span>Sơ đồ tóm tắt phục vụ tra cứu nhanh; khi áp dụng, đối chiếu văn bản gốc.</span>
+      </footer>
+    </div>
+
+    <script>
+    (function(){
+      "use strict";
+
+      /* ================= DỮ LIỆU SƠ ĐỒ (theo toàn văn Quy định 350-QĐ/TW) ================= */
+      var C1 = "#b42318", C2 = "#0b6e4f", C3 = "#175cd3", C4 = "#b54708";
+
+      var DATA = {
+        root: true,
+        t: "QUY ĐỊNH 350-QĐ/TW",
+        name: "Về đối tượng, tiêu chuẩn và phân cấp đào tạo lý luận chính trị",
+        meta: "Ban Bí thư · Hà Nội, ngày 29/8/2025",
+        c: [
+          { t:"Quy định chung", ref:"Chương I", color:C1, c:[
+            { t:"Phạm vi điều chỉnh và đối tượng áp dụng", ref:"Điều 1", c:[
+              { t:"Phạm vi: đào tạo lý luận chính trị trình độ trung cấp và cao cấp trong hệ thống chính trị" },
+              { t:"Đối tượng áp dụng", c:[
+                { t:"Cán bộ, công chức, viên chức trong cơ quan Đảng, Nhà nước, Mặt trận Tổ quốc, tổ chức chính trị – xã hội, đơn vị sự nghiệp, doanh nghiệp nhà nước, lực lượng vũ trang" },
+                { t:"Cấp ủy, tổ chức đảng, cơ quan tham mưu, giúp việc của cấp ủy; các học viện, trường được giao nhiệm vụ đào tạo lý luận chính trị" }
+              ]}
+            ]},
+            { t:"Nguyên tắc", ref:"Điều 2", c:[
+              { t:"Tổ chức đào tạo đúng đối tượng, tiêu chuẩn, theo phân cấp; phù hợp chức vụ, chức danh cán bộ" },
+              { t:"Bảo đảm thống nhất, đồng bộ; gắn với quy hoạch, bổ nhiệm, giới thiệu ứng cử, phân cấp quản lý cán bộ; rõ trách nhiệm, thẩm quyền" },
+              { t:"Học tập lý luận chính trị là nghĩa vụ, trách nhiệm và quyền lợi của cán bộ, đảng viên — trước hết là cán bộ lãnh đạo, quản lý" }
+            ]},
+            { t:"Giải thích từ ngữ", ref:"Điều 3", c:[
+              { t:"Đào tạo lý luận chính trị — gồm 2 cấp", c:[
+                { t:"Trung cấp: cho cán bộ lãnh đạo, quản lý cấp xã và tương đương; trang bị cơ bản, có hệ thống về chủ nghĩa Mác – Lênin, tư tưởng Hồ Chí Minh; nâng cao kỹ năng lãnh đạo, quản lý" },
+                { t:"Cao cấp: cho cán bộ lãnh đạo, quản lý trung và cao cấp; trang bị toàn diện, hiện đại; nâng cao tầm nhìn, tư duy chiến lược" }
+              ]},
+              { t:"Phân cấp đào tạo: phân định thẩm quyền, trách nhiệm của cấp ủy các cấp, học viện, trường và cơ quan liên quan trong xây dựng kế hoạch, nội dung, tổ chức, quản lý và kiểm tra, giám sát đào tạo" }
+            ]}
+          ]},
+          { t:"Đối tượng, tiêu chuẩn đào tạo", ref:"Chương II", color:C2, c:[
+            { t:"Trung cấp lý luận chính trị", ref:"Điều 4", c:[
+              { t:"Đối tượng", ref:"4.1", c:[
+                { t:"Cấp ủy đảng: cấp ủy viên của chi bộ cơ sở, đảng bộ cơ sở trở lên" },
+                { t:"Cán bộ, công chức, viên chức: phó trưởng phòng (tương đương) trở lên của cơ quan, đơn vị sự nghiệp công lập trực thuộc cấp xã, cấp tỉnh và ở Trung ương" },
+                { t:"Quân đội: chỉ huy cấp tiểu đoàn; phó tham mưu trưởng, phó chủ nhiệm chính trị trung đoàn; chỉ huy phòng (ban) cấp lữ đoàn, sư đoàn, bộ chỉ huy quân sự cấp tỉnh trở lên" },
+                { t:"Công an: phó trưởng công an cấp xã, phó đội trưởng (tương đương) trở lên" },
+                { t:"Doanh nghiệp: trưởng ban, trưởng phòng (tương đương) trở lên của công ty (tổng công ty) nhà nước thuộc UBND cấp tỉnh; của tập đoàn, tổng công ty, ngân hàng thương mại nhà nước" },
+                { t:"Giảng viên sẽ trực tiếp giảng dạy chương trình trung cấp tại các học viện, trường có nhiệm vụ đào tạo trung cấp" }
+              ]},
+              { t:"Tiêu chuẩn", ref:"4.2", c:[
+                { t:"Đảng viên dự bị hoặc chính thức" },
+                { t:"Tốt nghiệp cao đẳng trở lên (THPT trở lên đối với cán bộ là người dân tộc thiểu số, công tác tại xã, đặc khu miền núi, biên giới, hải đảo, vùng sâu, vùng xa, vùng đặc biệt khó khăn)" },
+                { t:"Hai năm liên tục liền kề thời điểm cử đi học: xếp loại hoàn thành tốt nhiệm vụ trở lên" },
+                { t:"Học hệ không tập trung: nữ từ 28 tuổi, nam từ 30 tuổi trở lên" }
+              ]},
+              { t:"Trường hợp đặc biệt: cấp có thẩm quyền xem xét, quyết định", ref:"4.3" }
+            ]},
+            { t:"Cao cấp lý luận chính trị", ref:"Điều 5", c:[
+              { t:"Đối tượng", ref:"5.1", c:[
+                { t:"Cán bộ đương chức: ủy viên BCH đảng bộ cấp trên trực tiếp của tổ chức cơ sở đảng trở lên; trưởng phòng (tương đương) cấp xã trở lên" },
+                { t:"Cấp ủy đảng: ủy viên ban thường vụ đảng ủy cấp trên trực tiếp của tổ chức cơ sở đảng trở lên" },
+                { t:"Cán bộ, công chức, viên chức: chỉ huy trưởng ban CHQS, chủ tịch HĐND, UBND, Ủy ban MTTQ cấp xã trở lên; trưởng phòng cấp tỉnh, ở Trung ương trở lên" },
+                { t:"Quân đội: trung đoàn trưởng, chính ủy trung đoàn; chỉ huy cấp lữ đoàn, sư đoàn, bộ CHQS cấp tỉnh; chỉ huy cơ quan chiến dịch, chiến lược; ban giám đốc bệnh viện, viện nghiên cứu, doanh nghiệp thuộc Bộ Quốc phòng trở lên" },
+                { t:"Công an: trưởng công an cấp xã, phó trưởng phòng (tương đương) trở lên" },
+                { t:"Doanh nghiệp: hội đồng thành viên (quản trị), ban giám đốc (tương đương) trở lên ở công ty (tổng công ty) nhà nước thuộc UBND cấp tỉnh; ở tập đoàn, tổng công ty, ngân hàng thương mại nhà nước" },
+                { t:"Giảng viên có đủ 3 năm công tác, sẽ trực tiếp giảng dạy chương trình cao cấp tại các học viện có nhiệm vụ đào tạo cao cấp" }
+              ]},
+              { t:"Tiêu chuẩn", ref:"5.2", c:[
+                { t:"Đảng viên chính thức" },
+                { t:"Tốt nghiệp đại học trở lên" },
+                { t:"Hai năm liên tục liền kề thời điểm cử đi học: xếp loại hoàn thành tốt nhiệm vụ trở lên" },
+                { t:"Học hệ không tập trung: nữ từ 33 tuổi, nam từ 35 tuổi trở lên" }
+              ]},
+              { t:"Trường hợp đặc biệt: cấp có thẩm quyền xem xét, quyết định", ref:"5.3" }
+            ]}
+          ]},
+          { t:"Phân cấp đào tạo lý luận chính trị", ref:"Chương III", color:C3, c:[
+            { t:"Phân cấp nhiệm vụ đào tạo", ref:"Điều 6", c:[
+              { t:"Trung cấp: trường chính trị cấp tỉnh đào tạo cho cán bộ địa phương, Trung ương, tập đoàn, tổng công ty, ngân hàng thương mại nhà nước; một số học viện, trường của Bộ Quốc phòng, Bộ Công an đào tạo cho lực lượng vũ trang" },
+              { t:"Cao cấp: Học viện Chính trị quốc gia Hồ Chí Minh và một số học viện của Bộ Quốc phòng, Bộ Công an" }
+            ]},
+            { t:"Thẩm quyền, trách nhiệm — đào tạo trung cấp", ref:"Điều 7", c:[
+              { t:"Cấp ủy cấp tỉnh: lãnh đạo, chỉ đạo; ban hành quy định, quy chế theo thẩm quyền; xây dựng kế hoạch toàn khóa và hằng năm; kiểm tra, giám sát" },
+              { t:"Ban tổ chức cấp ủy cấp tỉnh (đơn vị chức năng Bộ Quốc phòng, Bộ Công an): rà soát cán bộ, xác định nhu cầu, tham mưu kế hoạch; kiểm tra, giám sát; sơ kết, tổng kết, báo cáo" },
+              { t:"Ban tuyên giáo và dân vận cấp ủy cấp tỉnh: định hướng chính trị, tư tưởng trong nội dung đào tạo; hướng dẫn, kiểm tra, báo cáo" },
+              { t:"Học viện Chính trị quốc gia Hồ Chí Minh: đào tạo, bồi dưỡng, tập huấn phương pháp giảng dạy, chuyên môn, nghiệp vụ cho giảng viên trường chính trị cấp tỉnh và học viện, trường Bộ Quốc phòng, Bộ Công an" },
+              { t:"Trường chính trị cấp tỉnh, cơ sở đào tạo Bộ Quốc phòng, Bộ Công an: thực hiện kế hoạch, tổ chức và quản lý đào tạo; báo cáo định kỳ" },
+              { t:"Ban thường vụ cấp ủy cấp trên trực tiếp của tổ chức cơ sở đảng và cơ quan quản lý cán bộ: cử cán bộ học trung cấp đúng đối tượng, tiêu chuẩn" }
+            ]},
+            { t:"Thẩm quyền, trách nhiệm — đào tạo cao cấp", ref:"Điều 8", c:[
+              { t:"Ban Tổ chức Trung ương: xây dựng kế hoạch toàn khóa và hằng năm; hướng dẫn, kiểm tra, giám sát; sơ kết, tổng kết" },
+              { t:"Ban Tuyên giáo và Dân vận Trung ương: định hướng chính trị, tư tưởng trong nội dung đào tạo; hướng dẫn, kiểm tra, giám sát" },
+              { t:"Học viện Chính trị quốc gia Hồ Chí Minh: thực hiện kế hoạch, tổ chức và quản lý đào tạo cao cấp; bồi dưỡng, tập huấn giảng viên; báo cáo Ban Tổ chức Trung ương" },
+              { t:"Học viện của Bộ Quốc phòng, Bộ Công an: thực hiện kế hoạch, tổ chức và quản lý đào tạo; báo cáo định kỳ với cơ quan chủ quản" },
+              { t:"Ban thường vụ cấp ủy cấp tỉnh; đảng ủy ban, bộ, ngành Trung ương; đảng ủy tập đoàn, tổng công ty, ngân hàng thương mại nhà nước: cử cán bộ học cao cấp đúng đối tượng, tiêu chuẩn" }
+            ]}
+          ]},
+          { t:"Điều khoản thi hành", ref:"Chương IV", color:C4, c:[
+            { t:"Tổ chức thực hiện", ref:"Điều 9", c:[
+              { t:"Cấp ủy, tổ chức đảng các cấp: nghiên cứu, quán triệt và triển khai Quy định" },
+              { t:"Kinh phí đào tạo: bố trí từ ngân sách nhà nước" },
+              { t:"Ban Tổ chức Trung ương: chủ trì theo dõi, đôn đốc, kiểm tra, giám sát, hướng dẫn; hướng dẫn bồi dưỡng LLCT để nâng lương, chuyển ngạch, chức danh; quyết định trường hợp đặc biệt" },
+              { t:"Ban Tuyên giáo và Dân vận Trung ương: chỉ đạo định hướng chính trị, tư tưởng; chủ trì thẩm định nội dung chương trình đào tạo; kiểm tra, giám sát" },
+              { t:"Học viện Chính trị quốc gia Hồ Chí Minh: chủ trì xây dựng nội dung, chương trình, giáo trình, thời gian đào tạo phù hợp từng cấp; hướng dẫn thống nhất trong hệ thống chính trị" },
+              { t:"Các học viện, trường được giao nhiệm vụ: xây dựng quy chế và tổ chức, quản lý đào tạo theo Quy định" }
+            ]},
+            { t:"Hiệu lực thi hành", ref:"Điều 10", c:[
+              { t:"Có hiệu lực kể từ ngày ký (29/8/2025)" },
+              { t:"Thay thế Quy định số 57-QĐ/TW ngày 08/02/2022 của Ban Bí thư và các điều khoản trước đây không còn phù hợp" }
+            ]}
+          ]}
+        ]
+      };
+
+      /* ================= CHUẨN BỊ CÂY ================= */
+      var idSeq = 0;
+      var allNodes = [];
+      (function prep(node, depth, color, parent){
+        node.id = ++idSeq;
+        node.depth = depth;
+        node.parent = parent || null;
+        if (node.color) color = node.color;
+        node.color = color || "#888";
+        node.collapsed = false;
+        allNodes.push(node);
+        (node.c || []).forEach(function(ch){ prep(ch, depth + 1, color, node); });
+      })(DATA, 0, null, null);
+      // Mặc định: mở đến cấp Điều (độ sâu 2), các nhóm nội dung thu gọn — nhấn dấu + để mở
+      allNodes.forEach(function(n){ if (n.depth >= 2 && n.c && n.c.length) n.collapsed = true; });
+
+      /* ================= DỰNG NODE DOM ================= */
+      var world = document.getElementById("world");
+      var wires = document.getElementById("wires");
+      var viewport = document.getElementById("viewport");
+      var WIDTHS = [330, 252, 280, 332, 372];
+      var HGAP = 74, VGAP = 13;
+      var colX = [];
+      (function(){ var x = 0; for (var i = 0; i < WIDTHS.length; i++){ colX.push(x); x += WIDTHS[i] + HGAP; } })();
+
+      var els = {};
+      allNodes.forEach(function(node){
+        var el = document.createElement("div");
+        el.className = "node" + (node.root ? " root" : "") + (node.depth === 1 ? " d1" : node.depth === 2 ? " d2" : "");
+        el.style.setProperty("--bc", node.color);
+        el.style.width = WIDTHS[Math.min(node.depth, WIDTHS.length - 1)] + "px";
+        el.dataset.id = node.id;
+        if (node.root){
+          el.innerHTML =
+            '<div class="r-no"></div><div class="r-name"></div><div class="r-meta"></div>';
+          el.querySelector(".r-no").textContent = node.t;
+          el.querySelector(".r-name").textContent = node.name;
+          el.querySelector(".r-meta").textContent = node.meta;
+        } else {
+          var txt = document.createElement("span");
+          txt.className = "nt";
+          if (node.ref){
+            var r = document.createElement("span");
+            r.className = "ref";
+            r.textContent = node.ref;
+            el.appendChild(r);
+          }
+          txt.textContent = node.t;
+          el.appendChild(txt);
+        }
+        if (node.c && node.c.length){
+          el.classList.add("has-kids");
+          var tg = document.createElement("span");
+          tg.className = "toggle";
+          tg.setAttribute("role", "button");
+          tg.setAttribute("aria-label", "Mở hoặc thu nhánh");
+          tg.textContent = "−";
+          el.appendChild(tg);
+          node._toggle = tg;
+        }
+        el.addEventListener("click", function(ev){
+          if (node.c && node.c.length){
+            node.collapsed = !node.collapsed;
+            relayout(true);
+          }
+          ev.stopPropagation();
+        });
+        world.appendChild(el);
+        els[node.id] = el;
+        node._el = el;
+      });
+
+      function visibleKids(node){
+        if (node.collapsed) return [];
+        return node.c || [];
+      }
+      function isVisible(node){
+        var p = node.parent;
+        while (p){ if (p.collapsed) return false; p = p.parent; }
+        return true;
+      }
+
+      /* ================= BỐ CỤC (LAYOUT) ================= */
+      var worldW = 0, worldH = 0;
+      function relayout(keepView){
+        // Ẩn/hiện theo trạng thái thu gọn
+        allNodes.forEach(function(n){
+          n._el.style.display = isVisible(n) ? "" : "none";
+          if (n._toggle) n._toggle.textContent = n.collapsed ? "+" : "−";
+        });
+        // Đo chiều cao sau khi hiển thị
+        allNodes.forEach(function(n){ if (isVisible(n)) n._h = n._el.offsetHeight; });
+        var cursor = 0;
+        (function place(node){
+          var kids = visibleKids(node).filter(isVisible);
+          node._x = colX[Math.min(node.depth, colX.length - 1)];
+          if (!kids.length){
+            node._cy = cursor + node._h / 2;
+            cursor += node._h + VGAP;
+          } else {
+            kids.forEach(place);
+            node._cy = (kids[0]._cy + kids[kids.length - 1]._cy) / 2;
+          }
+        })(DATA);
+        worldH = cursor - VGAP;
+        worldW = colX[colX.length - 1] + WIDTHS[WIDTHS.length - 1];
+        allNodes.forEach(function(n){
+          if (!isVisible(n)) return;
+          n._el.style.left = n._x + "px";
+          n._el.style.top = (n._cy - n._h / 2) + "px";
+        });
+        // Vẽ đường nối
+        wires.setAttribute("width", worldW);
+        wires.setAttribute("height", worldH);
+        wires.setAttribute("viewBox", "0 0 " + worldW + " " + worldH);
+        var paths = "";
+        allNodes.forEach(function(n){
+          if (!n.parent || !isVisible(n)) return;
+          var p = n.parent;
+          var x1 = p._x + WIDTHS[Math.min(p.depth, WIDTHS.length - 1)], y1 = p._cy;
+          var x2 = n._x, y2 = n._cy;
+          var mx = Math.max(26, (x2 - x1) / 2);
+          paths += '<path d="M' + x1 + ' ' + y1 + ' C ' + (x1 + mx) + ' ' + y1 + ', ' + (x2 - mx) + ' ' + y2 + ', ' + x2 + ' ' + y2 +
+            '" fill="none" stroke="' + n.color + '" stroke-width="' + (n.depth === 1 ? 3 : 2) + '" stroke-opacity=".55"/>';
+        });
+        wires.innerHTML = paths;
+        if (!keepView) fitView();
+      }
+
+      /* ================= CAMERA: PAN / ZOOM ================= */
+      var view = { x: 20, y: 20, k: 0.6 };
+      function applyView(){
+        world.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.k + ")";
+      }
+      function fitView(){
+        var vw = viewport.clientWidth, vh = viewport.clientHeight;
+        var k = Math.min(vw / (worldW + 40), vh / (worldH + 40));
+        k = Math.max(0.05, Math.min(k, 1.05));
+        view.k = k;
+        view.x = Math.max(14, (vw - worldW * k) / 2);
+        view.y = Math.max(10, (vh - worldH * k) / 2);
+        applyView();
+      }
+      function zoomAt(cx, cy, factor){
+        var k2 = Math.max(0.08, Math.min(2.4, view.k * factor));
+        var wx = (cx - view.x) / view.k, wy = (cy - view.y) / view.k;
+        view.k = k2;
+        view.x = cx - wx * k2;
+        view.y = cy - wy * k2;
+        applyView();
+      }
+      function centerOn(wx, wy){
+        var vw = viewport.clientWidth, vh = viewport.clientHeight;
+        view.x = vw / 2 - wx * view.k;
+        view.y = vh / 2 - wy * view.k;
+        applyView();
+      }
+
+      var pointers = new Map();
+      var pinch = null;
+      viewport.addEventListener("pointerdown", function(e){
+        if (e.target.closest(".zoom-ctl")) return;
+        viewport.setPointerCapture(e.pointerId);
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (pointers.size === 2){
+          var pts = Array.from(pointers.values());
+          pinch = { d: Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) };
+        }
+      });
+      viewport.addEventListener("pointermove", function(e){
+        if (!pointers.has(e.pointerId)) return;
+        var prev = pointers.get(e.pointerId);
+        var dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        var rect = viewport.getBoundingClientRect();
+        if (pointers.size === 1){
+          view.x += dx; view.y += dy; applyView();
+        } else if (pointers.size === 2 && pinch){
+          var pts = Array.from(pointers.values());
+          var d = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+          var mx = (pts[0].x + pts[1].x) / 2 - rect.left, my = (pts[0].y + pts[1].y) / 2 - rect.top;
+          if (pinch.d > 0) zoomAt(mx, my, d / pinch.d);
+          pinch.d = d;
+        }
+      });
+      function endPointer(e){
+        pointers.delete(e.pointerId);
+        if (pointers.size < 2) pinch = null;
+      }
+      viewport.addEventListener("pointerup", endPointer);
+      viewport.addEventListener("pointercancel", endPointer);
+      viewport.addEventListener("wheel", function(e){
+        e.preventDefault();
+        var rect = viewport.getBoundingClientRect();
+        zoomAt(e.clientX - rect.left, e.clientY - rect.top, e.deltaY < 0 ? 1.12 : 1 / 1.12);
+      }, { passive: false });
+      viewport.addEventListener("dblclick", function(e){
+        if (e.target.closest(".node")) return;
+        var rect = viewport.getBoundingClientRect();
+        zoomAt(e.clientX - rect.left, e.clientY - rect.top, 1.5);
+      });
+
+      document.getElementById("zoomIn").addEventListener("click", function(){
+        zoomAt(viewport.clientWidth / 2, viewport.clientHeight / 2, 1.3);
+      });
+      document.getElementById("zoomOut").addEventListener("click", function(){
+        zoomAt(viewport.clientWidth / 2, viewport.clientHeight / 2, 1 / 1.3);
+      });
+      document.getElementById("zoomFit").addEventListener("click", fitView);
+      document.getElementById("btnFit").addEventListener("click", fitView);
+      document.getElementById("btnExpand").addEventListener("click", function(){
+        allNodes.forEach(function(n){ n.collapsed = false; });
+        relayout(true);
+      });
+      document.getElementById("btnCollapse").addEventListener("click", function(){
+        allNodes.forEach(function(n){ if (n.depth >= 2 && n.c && n.c.length) n.collapsed = true; });
+        relayout(false);
+      });
+
+      /* ================= TÌM KIẾM ================= */
+      function norm(s){
+        return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d");
+      }
+      var searchInput = document.getElementById("searchInput");
+      var searchCount = document.getElementById("searchCount");
+      var searchTimer = null;
+      function clearHits(){
+        allNodes.forEach(function(n){ n._el.classList.remove("hit"); });
+        document.querySelectorAll(".outline li.hit").forEach(function(li){ li.classList.remove("hit"); });
+        searchCount.style.display = "none";
+      }
+      function doSearch(){
+        var q = norm(searchInput.value.trim());
+        clearHits();
+        if (q.length < 2) return;
+        var hits = allNodes.filter(function(n){
+          return norm((n.ref || "") + " " + n.t + " " + (n.name || "")).indexOf(q) !== -1;
+        });
+        if (!hits.length){
+          searchCount.textContent = "Không thấy";
+          searchCount.style.display = "block";
+          return;
+        }
+        // Mở các nhánh chứa kết quả
+        hits.forEach(function(h){
+          var p = h.parent;
+          while (p){ p.collapsed = false; p = p.parent; }
+          h._el.classList.add("hit");
+        });
+        relayout(true);
+        document.querySelectorAll(".outline [data-q]").forEach(function(li){
+          if (norm(li.getAttribute("data-q")).indexOf(q) !== -1) li.classList.add("hit");
+        });
+        searchCount.textContent = hits.length + " mục";
+        searchCount.style.display = "block";
+        // Đưa kết quả đầu tiên vào giữa khung (ở chế độ sơ đồ)
+        if (!listMode){
+          var first = hits[0];
+          if (view.k < 0.55) view.k = 0.55;
+          centerOn(first._x + 130, first._cy);
+        }
+      }
+      searchInput.addEventListener("input", function(){
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(doSearch, 220);
+      });
+      searchInput.addEventListener("search", doSearch);
+
+      /* ================= CHẾ ĐỘ DANH SÁCH ================= */
+      var listMode = false;
+      var listview = document.getElementById("listview");
+      (function buildList(){
+        function item(node){
+          var li = document.createElement("li");
+          li.style.setProperty("--bc", node.color);
+          li.setAttribute("data-q", (node.ref || "") + " " + node.t);
+          if (node.depth === 1) li.className = "lv-chapter";
+          else if (node.depth === 2) li.className = "lv-article";
+          else if (node.depth === 3 && node.c && node.c.length) li.className = "lv-group";
+          if (node.ref && node.depth > 1){
+            var r = document.createElement("span");
+            r.className = "ref";
+            r.textContent = node.ref + " ";
+            li.appendChild(r);
+          }
+          li.appendChild(document.createTextNode(node.depth === 1 ? node.ref + " — " + node.t : node.t));
+          if (node.c && node.c.length){
+            var ul = document.createElement("ul");
+            ul.style.setProperty("--bc", node.color);
+            node.c.forEach(function(ch){ ul.appendChild(item(ch)); });
+            li.appendChild(ul);
+          }
+          return li;
+        }
+        var ul = document.createElement("ul");
+        ul.className = "outline";
+        DATA.c.forEach(function(ch){ ul.appendChild(item(ch)); });
+        listview.appendChild(ul);
+      })();
+
+      var viewMapBtn = document.getElementById("viewMap");
+      var viewListBtn = document.getElementById("viewList");
+      function setMode(list){
+        listMode = list;
+        viewport.classList.toggle("off", list);
+        listview.classList.toggle("on", list);
+        viewMapBtn.classList.toggle("active", !list);
+        viewListBtn.classList.toggle("active", list);
+        if (!list) relayout(true);
+        if (searchInput.value.trim().length >= 2) doSearch();
+      }
+      viewMapBtn.addEventListener("click", function(){ setMode(false); });
+      viewListBtn.addEventListener("click", function(){ setMode(true); });
+
+      window.addEventListener("resize", function(){ /* giữ nguyên khung nhìn */ });
+
+      /* ================= KHỞI TẠO ================= */
+      relayout(false);
+      if (document.fonts && document.fonts.ready){
+        document.fonts.ready.then(function(){ relayout(false); });
+      }
+    })();
+    </script>
+  </body>
+</html>
